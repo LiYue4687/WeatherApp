@@ -15,8 +15,10 @@ import com.example.weatherapp.data.retrofit.entity.Forecast
 import com.example.weatherapp.data.room.entity.CityEntity
 import com.example.weatherapp.data.room.entity.ForecastEntity
 import com.example.weatherapp.data.room.repository.WeatherRepository
+import com.example.weatherapp.ui.weather.util.ClassTransUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,6 +32,10 @@ class WeatherViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository
 ) : AndroidViewModel(application) {
     val cityList = mutableStateOf(listOf("北京"))
+
+    init {
+        init()
+    }
 
     private var weatherState =
         mutableStateMapOf(
@@ -115,14 +121,20 @@ class WeatherViewModel @Inject constructor(
                 buildAndInsertCity(forecast)
                 for (i in forecast.casts.indices) {
                     Log.d("myTest", "weatherResponse: ${forecast.casts[i]}")
-                    insetOrUpdateWeatherForecast(buildWeatherForecast(i, forecast, forecast.casts[i]))
+                    insetOrUpdateWeatherForecast(
+                        buildWeatherForecast(
+                            i,
+                            forecast,
+                            forecast.casts[i]
+                        )
+                    )
                 }
             }
 
         }
     }
 
-    private suspend fun buildAndInsertCity(forecast: Forecast){
+    private suspend fun buildAndInsertCity(forecast: Forecast) {
         val name = forecast.province + "  " + forecast.city
         if (!cityList.value.contains(name)) {
             weatherRepository.insertCity(
@@ -134,7 +146,11 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    private fun buildWeatherForecast(count:Int, forecast: Forecast, cast: CastItem): ForecastEntity {
+    private fun buildWeatherForecast(
+        count: Int,
+        forecast: Forecast,
+        cast: CastItem
+    ): ForecastEntity {
         return ForecastEntity(
             forecast.province + "_" + forecast.city + "_" + count,
             forecast.adcode,
@@ -150,12 +166,37 @@ class WeatherViewModel @Inject constructor(
         )
     }
 
-    private suspend fun insetOrUpdateWeatherForecast(forecastEntity: ForecastEntity){
-        if(weatherRepository.getWeatherByUid(forecastEntity.uid)!=null){
+    private suspend fun insetOrUpdateWeatherForecast(forecastEntity: ForecastEntity) {
+        if (weatherRepository.getWeatherByUid(forecastEntity.uid) != null) {
             weatherRepository.updateWeatherForecast(forecastEntity)
-        }
-        else{
+        } else {
             weatherRepository.insertWeatherForecast(forecastEntity)
+        }
+    }
+
+    private fun init() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val cities = weatherRepository.getCities()
+            val stateList: MutableList<WeatherState> = mutableListOf()
+            for (city in cities) {
+//                Log.i("myTest", "")
+                stateList.add(
+                    ClassTransUtil.translateSqlResultToSate(
+                        city,
+                        weatherRepository.getWeatherByCityName(city)
+                    )
+                )
+            }
+            viewModelScope.launch(Dispatchers.Main) {
+                cityList.apply {
+                    cityList.value = cities
+                }
+                for ((index, city) in cities.withIndex()) {
+                    weatherState.apply {
+                        weatherState[city] = mutableStateOf(stateList[index])
+                    }
+                }
+            }
         }
     }
 

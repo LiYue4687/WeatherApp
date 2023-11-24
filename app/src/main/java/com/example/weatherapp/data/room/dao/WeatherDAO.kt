@@ -14,12 +14,12 @@ interface WeatherDAO {
     @Query("SELECT name FROM city")
     fun getCities(): List<String>
 
-    @Query("SELECT * FROM forecast WHERE forecast.code = :code ORDER BY date LIMIT 3")
+    @Query("SELECT * FROM forecast WHERE forecast.code = :code ORDER BY date")
     fun getWeatherByCode(code: String): List<ForecastEntity>
 
     @Query("SELECT * FROM forecast WHERE " +
             "forecast.code = (SELECT code FROM city WHERE city.name = :name LIMIT 1)" +
-            "ORDER BY date LIMIT 3")
+            "ORDER BY date")
     fun getWeatherByCityName(name: String): List<ForecastEntity>
 
     @Query("SELECT * FROM forecast WHERE uid = :uid")
