@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.data.retrofit.entity
+package com.example.weatherapp.data.retrofit.entity
 
 data class WeatherResponse(
     val status: String,

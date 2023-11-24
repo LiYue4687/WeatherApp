@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.data.retrofit
+package com.example.weatherapp.data.retrofit
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

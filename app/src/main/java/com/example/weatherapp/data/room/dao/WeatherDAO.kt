@@ -1,12 +1,12 @@
-package com.example.weatherapp.ui.data.room.dao
+package com.example.weatherapp.data.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.weatherapp.ui.data.room.entity.CityEntity
-import com.example.weatherapp.ui.data.room.entity.ForecastEntity
+import com.example.weatherapp.data.room.entity.CityEntity
+import com.example.weatherapp.data.room.entity.ForecastEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

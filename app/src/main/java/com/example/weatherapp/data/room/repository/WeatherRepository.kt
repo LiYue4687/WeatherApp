@@ -1,10 +1,10 @@
-package com.example.weatherapp.ui.data.room.repository
+package com.example.weatherapp.data.room.repository
 
 import android.app.Application
-import com.example.weatherapp.ui.data.room.dao.WeatherDAO
-import com.example.weatherapp.ui.data.room.database.WeatherDatabase
-import com.example.weatherapp.ui.data.room.entity.CityEntity
-import com.example.weatherapp.ui.data.room.entity.ForecastEntity
+import com.example.weatherapp.data.room.dao.WeatherDAO
+import com.example.weatherapp.data.room.database.WeatherDatabase
+import com.example.weatherapp.data.room.entity.CityEntity
+import com.example.weatherapp.data.room.entity.ForecastEntity
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

@@ -1,12 +1,12 @@
-package com.example.weatherapp.ui.data.room.database
+package com.example.weatherapp.data.room.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.weatherapp.ui.data.room.dao.WeatherDAO
-import com.example.weatherapp.ui.data.room.entity.CityEntity
-import com.example.weatherapp.ui.data.room.entity.ForecastEntity
+import com.example.weatherapp.data.room.dao.WeatherDAO
+import com.example.weatherapp.data.room.entity.CityEntity
+import com.example.weatherapp.data.room.entity.ForecastEntity
 
 @Database(entities = [CityEntity::class, ForecastEntity::class], version = 2, exportSchema = false)
 abstract class WeatherDatabase : RoomDatabase() {
