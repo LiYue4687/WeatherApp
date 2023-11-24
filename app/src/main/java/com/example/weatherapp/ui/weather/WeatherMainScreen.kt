@@ -56,8 +56,9 @@ import com.example.weatherapp.R
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun WeatherMainScreen(
-    modifier: Modifier = Modifier,
-    weatherViewModel: WeatherViewModel = viewModel()
+    toAddScreen: ()->Unit,
+    weatherViewModel: WeatherViewModel,
+    modifier: Modifier = Modifier
 ) {
     val cityList = weatherViewModel.cityList
 
@@ -82,7 +83,7 @@ fun WeatherMainScreen(
             TopAppBar(
                 title = { /*TODO*/ },
                 actions = {
-                    IconButton(onClick = { weatherViewModel.getWeather() }) {
+                    IconButton(onClick = { toAddScreen.invoke() }) {
                         Icon(Icons.Filled.Add, null)
                     }
                 }

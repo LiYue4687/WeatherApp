@@ -31,60 +31,17 @@ class WeatherViewModel @Inject constructor(
     application: Application,
     private val weatherRepository: WeatherRepository
 ) : AndroidViewModel(application) {
-    val cityList = mutableStateOf(listOf("北京"))
+    val cityList = mutableStateOf(listOf(""))
 
     init {
         init()
     }
 
-    private var weatherState =
-        mutableStateMapOf(
-            "北京" to
-                    mutableStateOf(
-                        WeatherState(
-                            "北京",
-                            10,
-                            0.40f,
-                            0.40f,
-                            Pair<String, String>("6:00", "18:00"),
-                            listOf(
-                                Pair<String, Int>("sun", 10),
-                                Pair<String, Int>("sun", 12),
-                                Pair<String, Int>("sun", 12)
-                            ),
-                            listOf(
-                                Triple<String, Int, Int>("sun", 10, 20),
-                                Triple<String, Int, Int>("sun", 8, 20)
-                            )
-                        )
-                    )
-        )
+    private var weatherState:MutableMap<String, MutableState<WeatherState>> =
+        mutableStateMapOf()
 
-    fun addPosition(
-        newPosition: String = "天津", weather: MutableState<WeatherState> = mutableStateOf(
-            WeatherState(
-                "天津",
-                20,
-                0.60f,
-                0.40f,
-                Pair<String, String>("6:00", "18:00"),
-                listOf(
-                    Pair<String, Int>("sun", 30),
-                    Pair<String, Int>("sun", 22),
-                    Pair<String, Int>("sun", 32)
-                ),
-                listOf(
-                    Triple<String, Int, Int>("sun", 10, 20),
-                    Triple<String, Int, Int>("sun", 8, 20)
-                )
-            )
-        )
-    ) {
-        weatherState.apply { weatherState[newPosition] = weather }
-        Log.i("myTest", weatherState.toString())
-        if (!cityList.value.contains(newPosition)) cityList.apply {
-            cityList.value = cityList.value + newPosition
-        }
+    fun addPosition() {
+        /* TODO */
     }
 
     fun getCurWeather(curPosition: String): String {
@@ -187,6 +144,7 @@ class WeatherViewModel @Inject constructor(
                     )
                 )
             }
+
             viewModelScope.launch(Dispatchers.Main) {
                 cityList.apply {
                     cityList.value = cities
