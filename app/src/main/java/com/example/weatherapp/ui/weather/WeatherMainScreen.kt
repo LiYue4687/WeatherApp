@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -24,6 +25,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Divider
@@ -45,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
@@ -56,7 +59,7 @@ import com.example.weatherapp.R
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun WeatherMainScreen(
-    toAddScreen: ()->Unit,
+    toAddScreen: () -> Unit,
     weatherViewModel: WeatherViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -76,43 +79,25 @@ fun WeatherMainScreen(
         )
     }
 
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        containerColor = Color.Transparent,
-        topBar = {
-            TopAppBar(
-                title = { /*TODO*/ },
-                actions = {
-                    IconButton(onClick = { toAddScreen.invoke() }) {
-                        Icon(Icons.Filled.Add, null)
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
-        HorizontalPager(modifier = modifier,
-            state = pagerState,
-            pageCount = weatherViewModel.cityList.value.size,
-            pageContent = { page ->
-                val curPosition = cityList.value[page]
-                WeatherMainBody(
-                    curPosition, weatherViewModel.getCurWeather(curPosition),
-                    weatherViewModel.getAirScore(curPosition),
-                    weatherViewModel.getWeatherByHour(curPosition),
-                    weatherViewModel.getWeatherByDay(curPosition),
-                    modifier = Modifier.absolutePadding(
-                        left = 15.dp,
-                        top = paddingValues.calculateTopPadding(), right = 15.dp,
-                        bottom = paddingValues.calculateBottomPadding()
-                    )
+    HorizontalPager(modifier = modifier,
+        state = pagerState,
+        pageCount = weatherViewModel.cityList.value.size,
+        pageContent = { page ->
+            val curPosition = cityList.value[page]
+            WeatherMainBody(
+                curPosition, weatherViewModel.getCurWeather(curPosition),
+                weatherViewModel.getAirScore(curPosition),
+                weatherViewModel.getWeatherByHour(curPosition),
+                weatherViewModel.getWeatherByDay(curPosition),
+                modifier = Modifier.absolutePadding(
+                    left = 15.dp, right = 15.dp
                 )
-            })
-//        WeatherMainBody(curPosition, curWeather, airScore,
-//            weatherByHour, weatherByDay, modifier = Modifier.absolutePadding(left = 15.dp,
-//                top = paddingValues.calculateTopPadding(), right = 15.dp,
-//                bottom = paddingValues.calculateBottomPadding()))
+            )
+        })
+    // need to in the after of HorizontalPager
+    // for on the upper layer of HorizontalPager
+    WeatherTopBar(toAddScreen, toAddScreen)
 
-    }
 }
 
 @Composable
@@ -236,3 +221,26 @@ fun WeatherMainBody(
         }
     }
 }
+
+@Composable
+fun WeatherTopBar(
+    onAddClick: () -> Unit,
+    onManageClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .systemBarsPadding(),
+        horizontalArrangement = Arrangement.End
+    ) {
+        IconButton(onClick = { onAddClick.invoke() }) {
+            Icon(Icons.Filled.Add, null)
+        }
+        IconButton(onClick = { onManageClick.invoke() }) {
+            Icon(Icons.Filled.Menu, null)
+        }
+    }
+}
+
+
