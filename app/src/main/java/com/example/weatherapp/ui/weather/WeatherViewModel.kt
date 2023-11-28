@@ -48,7 +48,7 @@ class WeatherViewModel @Inject constructor(
     }
 
     fun getCurWeather(curPosition: String): String {
-        Log.i("myTest", curPosition)
+//        Log.i("myTest", curPosition)
         val weather: String =
             weatherState[curPosition]?.value?.weatherByHour?.get(0)?.first ?: "unknown"
         val value: Int = weatherState[curPosition]?.value?.weatherByHour?.get(0)?.second ?: 0
