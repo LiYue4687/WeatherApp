@@ -37,11 +37,24 @@ Develop a weather app based on compose. Contains third-party libraries such as R
 # Commit History
 2023/11/24:basic functions, like use room to save data, use retrofit to get weather data from GaoDe map's Api, and basic ui.
 
+2023/11/27:Change the topbar of weathermainscreen to transparent Row so that it no longer blocks the picture
+
+2023/11/28:An initial database has been added, which records the adcodes and names of all cities, from which the required cities can be filtered.
+
 # TODO Lit
-- more pages
+View
+- screen of add city to know the weather
+- screen of manage the cities
 
 Navigation
 - add another navigation to screen of manage the city that want to know the weather
 
 Animation:
 - add weather animation
+
+DataBase
+- add the init of database
+- add migration of database
+
+Api
+- Change to a more feature-rich API
