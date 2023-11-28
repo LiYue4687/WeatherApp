@@ -88,4 +88,11 @@ dependencies {
 //    kapt {
 //        correctErrorTypes = true
 //    }
+
+    // Apache poiAMap_adcode_citycode.xlsx
+    implementation("org.apache.poi:poi:5.0.0")
+
+    // work
+    implementation("androidx.work:work-runtime:2.7.0")
+
 }

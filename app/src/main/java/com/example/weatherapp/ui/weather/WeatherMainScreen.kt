@@ -96,7 +96,7 @@ fun WeatherMainScreen(
         })
     // need to in the after of HorizontalPager
     // for on the upper layer of HorizontalPager
-    WeatherTopBar(toAddScreen, toAddScreen)
+    WeatherTopBar({ weatherViewModel.getWeather() }, toAddScreen)
 
 }
 

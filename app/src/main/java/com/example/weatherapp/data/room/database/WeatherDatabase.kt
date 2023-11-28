@@ -25,6 +25,7 @@ abstract class WeatherDatabase : RoomDatabase() {
                 )
                     // Don't want to provide migrations and clear the database when upgrading the version
                     .fallbackToDestructiveMigration()
+                    .createFromAsset("weather_database")
                     .build()
                 INSTANCE = instance
                 instance
