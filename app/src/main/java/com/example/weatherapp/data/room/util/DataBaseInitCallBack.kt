@@ -36,16 +36,16 @@ class DataBaseInitCallBack(private val context: Context) : RoomDatabase.Callback
 
             var privince: String = "unknown"
             var city: String = "unknown"
-            var name: String = "unknown"
+            var name: String
             var citycode: String = "unknown"
-            var adcode: String = "unknown"
+            var adcode: String
             Log.i("myTest",cityList.toString())
             cityList.takeIf { it.length() > 0 }?.let { list ->
                 for (index in 0 until list.length()) {
                     val cityObj = list.getJSONObject(index)
                     Log.i("myTest",cityObj.toString())
-                    name = cityObj.get("name")?.toString()?:"unknown"
-                    adcode = cityObj.get("adcode")?.toString()?:"unknown"
+                    name = cityObj.get("name").toString()
+                    adcode = cityObj.get("adcode").toString()
                     Log.i("myTest",cityObj.has("citycode").toString())
                     if (!cityObj.has("citycode")){
                         privince = name
@@ -54,8 +54,8 @@ class DataBaseInitCallBack(private val context: Context) : RoomDatabase.Callback
                         Log.i("myTest",name)
                         Log.i("myTest",adcode)
                         Log.i("myTest",CityInfoEntity(privince, city, citycode).toString())
-                        if (citycode!=cityObj.get("citycode")?.toString()?:"unknown"){
-                            citycode=cityObj.get("citycode")?.toString()?:"unknown"
+                        if (citycode!=cityObj.get("citycode").toString()){
+                            citycode=cityObj.get("citycode").toString()
                             city = name
                             cityInfoDAO.insert(CityInfoEntity(privince, city, citycode))
                             cityListDAO.insert(CityListEntity(name, citycode, adcode))

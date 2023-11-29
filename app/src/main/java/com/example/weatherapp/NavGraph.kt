@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.ui.add.AddScreen
+import com.example.weatherapp.ui.manage.ManageScreen
 import com.example.weatherapp.ui.weather.WeatherMainScreen
 import com.example.weatherapp.ui.weather.WeatherViewModel
 
@@ -17,12 +18,17 @@ fun NavGraph() {
     NavHost(navController = navController, startDestination = "WeatherMainScreen") {
         composable("WeatherMainScreen"){
             val weatherViewModel = hiltViewModel<WeatherViewModel>()
-            WeatherMainScreen({navController.navigate("AddScreen")}, weatherViewModel)
+            WeatherMainScreen({navController.navigate("ManageScreen")}, weatherViewModel)
         }
         //声明名为MainPage的页面路由
         composable("AddScreen"){
             //页面路由对应的页面组件
             AddScreen()
+        }
+        composable("ManageScreen"){
+            val weatherViewModel = hiltViewModel<WeatherViewModel>()
+            //页面路由对应的页面组件
+            ManageScreen(weatherViewModel)
         }
     }
 

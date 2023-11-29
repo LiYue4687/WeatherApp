@@ -34,7 +34,7 @@ class WeatherViewModel @Inject constructor(
     application: Application,
     private val weatherRepository: WeatherRepository
 ) : AndroidViewModel(application) {
-    val cityList = mutableStateOf(listOf(""))
+    val cityList: MutableState<List<String>> = mutableStateOf(listOf())
 
     init {
         init()
@@ -75,14 +75,14 @@ class WeatherViewModel @Inject constructor(
                 "9ae5b2161dee449c6594537c48394902",
                 "110101", "all"
             )
-            Log.d("myTest", "weatherResponse: $weatherResponse")
+//            Log.d("myTest", "weatherResponse: $weatherResponse")
             for (forecast in weatherResponse.forecasts) {
-                Log.d("myTest", "weatherResponse: $forecast")
+//                Log.d("myTest", "weatherResponse: $forecast")
                 buildAndInsertCity(forecast)
                 for (i in forecast.casts.indices) {
-                    Log.d("myTest", "weatherResponse: ${forecast.casts[i]}")
+//                    Log.d("myTest", "weatherResponse: ${forecast.casts[i]}")
                     insetOrUpdateWeatherForecast(
-                        buildWeatherForecast(
+                        ClassTransUtil.buildWeatherForecast(
                             i,
                             forecast,
                             forecast.casts[i]
@@ -91,6 +91,7 @@ class WeatherViewModel @Inject constructor(
                 }
             }
 
+            init()
         }
     }
 
@@ -106,25 +107,6 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    private fun buildWeatherForecast(
-        count: Int,
-        forecast: Forecast,
-        cast: CastItem
-    ): ForecastEntity {
-        return ForecastEntity(
-            forecast.province + "_" + forecast.city + "_" + count,
-            forecast.adcode,
-            cast.date,
-            cast.dayweather,
-            cast.nightweather,
-            cast.daytemp,
-            cast.nighttemp,
-            cast.daywind,
-            cast.nightwind,
-            cast.daypower,
-            cast.nightpower
-        )
-    }
 
     private suspend fun insetOrUpdateWeatherForecast(forecastEntity: ForecastEntity) {
         if (weatherRepository.getWeatherByUid(forecastEntity.uid) != null) {

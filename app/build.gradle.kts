@@ -95,4 +95,6 @@ dependencies {
     // work
     implementation("androidx.work:work-runtime:2.7.0")
 
+    //newest material
+    implementation("androidx.compose.material:material:1.3.1")
 }

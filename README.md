@@ -43,7 +43,7 @@ Develop a weather app based on compose. Contains third-party libraries such as R
 complete the database init, and changed the database structure.
 
 
-# TODO Lit
+# TODO List
 View
 - modifier the WeatherMainsScreen, make it better
 - screen of add city to know the weather
@@ -56,7 +56,7 @@ Animation:
 - add weather animation
 
 DataBase
-- add the init of database
+- ~~add the init of database~~
 - add migration of database
 
 Api

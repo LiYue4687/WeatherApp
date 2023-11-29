@@ -1,5 +1,7 @@
 package com.example.weatherapp.ui.weather.util
 
+import com.example.weatherapp.data.retrofit.entity.CastItem
+import com.example.weatherapp.data.retrofit.entity.Forecast
 import com.example.weatherapp.data.retrofit.entity.WeatherResponse
 import com.example.weatherapp.data.room.entity.ForecastEntity
 import com.example.weatherapp.ui.weather.WeatherState
@@ -43,6 +45,26 @@ object ClassTransUtil {
         return WeatherState(
             name, 10, 0.6f, 0.6f, Pair("6:00", "18:00"),
             weatherByHour.toList(), weatherByDay.toList()
+        )
+    }
+
+    fun buildWeatherForecast(
+        count: Int,
+        forecast: Forecast,
+        cast: CastItem
+    ): ForecastEntity {
+        return ForecastEntity(
+            forecast.province + "_" + forecast.city + "_" + count,
+            forecast.adcode,
+            cast.date,
+            cast.dayweather,
+            cast.nightweather,
+            cast.daytemp,
+            cast.nighttemp,
+            cast.daywind,
+            cast.nightwind,
+            cast.daypower,
+            cast.nightpower
         )
     }
 }
