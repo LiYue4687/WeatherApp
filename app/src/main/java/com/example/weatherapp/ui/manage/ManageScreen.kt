@@ -23,6 +23,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.weatherapp.ui.weather.WeatherViewModel
+import com.example.weatherapp.ui.widget.CityManageItem
 
 @Composable
 fun ManageScreen(
@@ -42,12 +43,12 @@ fun ManageScreen(
 
     LazyColumn {
         itemsIndexed(cityList.value){index,it->
-            Card( modifier = Modifier.fillMaxWidth().height(30.dp)) {
-                Text(text = "$it")
-            }
+            CityManageItem(it) { weatherViewModel.delCity(it) }
         }
-
     }
 
 
 }
+
+
+

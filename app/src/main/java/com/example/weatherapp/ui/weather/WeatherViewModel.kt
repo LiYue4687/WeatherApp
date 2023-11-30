@@ -34,13 +34,13 @@ class WeatherViewModel @Inject constructor(
     application: Application,
     private val weatherRepository: WeatherRepository
 ) : AndroidViewModel(application) {
-    val cityList: MutableState<List<String>> = mutableStateOf(listOf())
+    val cityList: MutableState<List<CityEntity>> = mutableStateOf(listOf())
 
     init {
         init()
     }
 
-    private var weatherState:MutableMap<String, MutableState<WeatherState>> =
+    private var weatherState: MutableMap<String, MutableState<WeatherState>> =
         mutableStateMapOf()
 
     fun addPosition() {
@@ -73,7 +73,7 @@ class WeatherViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val weatherResponse = WeatherClient.weatherAPI.getWeather(
                 "9ae5b2161dee449c6594537c48394902",
-                "110101", "all"
+                "141023", "all"
             )
 //            Log.d("myTest", "weatherResponse: $weatherResponse")
             for (forecast in weatherResponse.forecasts) {
@@ -97,7 +97,7 @@ class WeatherViewModel @Inject constructor(
 
     private suspend fun buildAndInsertCity(forecast: Forecast) {
         val name = forecast.province + "  " + forecast.city
-        if (!cityList.value.contains(name)) {
+        if (!containCity(name)) {
             weatherRepository.insertCity(
                 CityEntity(
                     name = name,
@@ -105,6 +105,13 @@ class WeatherViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    private fun containCity(name: String): Boolean {
+        cityList.value.forEach {
+            if (it.name == name) return true
+        }
+        return false
     }
 
 
@@ -124,8 +131,8 @@ class WeatherViewModel @Inject constructor(
 //                Log.i("myTest", "")
                 stateList.add(
                     ClassTransUtil.translateSqlResultToSate(
-                        city,
-                        weatherRepository.getWeatherByCityName(city)
+                        city.name,
+                        weatherRepository.getWeatherByCityName(city.name)
                     )
                 )
             }
@@ -136,10 +143,16 @@ class WeatherViewModel @Inject constructor(
                 }
                 for ((index, city) in cities.withIndex()) {
                     weatherState.apply {
-                        weatherState[city] = mutableStateOf(stateList[index])
+                        weatherState[city.name] = mutableStateOf(stateList[index])
                     }
                 }
             }
+        }
+    }
+
+    fun delCity(city: CityEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            weatherRepository.delCity(city)
         }
     }
 

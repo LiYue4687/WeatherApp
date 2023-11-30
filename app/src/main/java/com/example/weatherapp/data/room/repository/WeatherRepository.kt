@@ -20,7 +20,7 @@ class WeatherRepository @Inject constructor(private val context: Application) {
     private val cityListDAO: CityListDAO = WeatherDatabase.getDatabase(context).cityListDAO()
     private val cityInfoDAO: CityInfoDAO = WeatherDatabase.getDatabase(context).cityInfoDAO()
 
-    fun getCities(): List<String> {
+    fun getCities(): List<CityEntity> {
         return weatherDAO.getCities()
     }
 
@@ -55,6 +55,10 @@ class WeatherRepository @Inject constructor(private val context: Application) {
 
     fun updateWeatherForecast(forecastEntity: ForecastEntity) {
         weatherDAO.updateWeatherForecast(forecastEntity)
+    }
+
+    fun delCity(cityEntity: CityEntity){
+        weatherDAO.delCity(cityEntity)
     }
 
 }

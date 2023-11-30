@@ -83,7 +83,7 @@ fun WeatherMainScreen(
         state = pagerState,
         pageCount = weatherViewModel.cityList.value.size,
         pageContent = { page ->
-            val curPosition = cityList.value[page]
+            val curPosition = cityList.value[page].name
             WeatherMainBody(
                 curPosition, weatherViewModel.getCurWeather(curPosition),
                 weatherViewModel.getAirScore(curPosition),

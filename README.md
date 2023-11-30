@@ -42,6 +42,8 @@ Develop a weather app based on compose. Contains third-party libraries such as R
 2023/11/28:An initial database has been added, which records the adcodes and names of all cities.
 complete the database init, and changed the database structure.
 
+2023/11/30:Add the screen of manage the cities, accomplish the function of show the cities and slide to delete.
+
 
 # TODO List
 View

@@ -1,17 +1,24 @@
 package com.example.weatherapp.ui.widget
 
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 
 /**
  * 左滑右滑对Item进行操作
@@ -41,15 +48,18 @@ fun SwipeDeleteLayout(
     }
 
     Box(
-        modifier.swipeable(
-            state = swipeState,
-            anchors = mapOf(deleteWidth.toFloat() to 1, 0.7f to 0),
-            thresholds = { _, _ ->
-                FractionalThreshold(0.7f)
-            },
-            reverseDirection = swipeStyle == SwipeStyle.EndToStart,
-            orientation = Orientation.Horizontal
-        )
+        modifier
+            .fillMaxWidth()
+            .background(Color.Gray)
+            .swipeable(
+                state = swipeState,
+                anchors = mapOf(deleteWidth.toFloat() to 1, 0f to 0),
+                thresholds = { _, _ ->
+                    FractionalThreshold(1f)
+                },
+                reverseDirection = swipeStyle == SwipeStyle.EndToStart,
+                orientation = Orientation.Horizontal
+            )
     ) {
         Box(modifier = Modifier
             .onGloballyPositioned {
@@ -76,6 +86,7 @@ fun SwipeDeleteLayout(
                     }, 0
                 )
             }
+            .background(Color.DarkGray)
         ) {
             content()
         }
@@ -88,3 +99,4 @@ fun SwipeDeleteLayout(
 @Composable
 private fun getDeleteAlign(swipeStyle: SwipeStyle) =
     if (swipeStyle == SwipeStyle.EndToStart) Alignment.CenterEnd else Alignment.CenterStart
+
