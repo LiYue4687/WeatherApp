@@ -18,12 +18,13 @@ fun NavGraph() {
     NavHost(navController = navController, startDestination = "WeatherMainScreen") {
         composable("WeatherMainScreen"){
             val weatherViewModel = hiltViewModel<WeatherViewModel>()
-            WeatherMainScreen({navController.navigate("ManageScreen")}, weatherViewModel)
+            WeatherMainScreen({navController.navigate("AddScreen")}, {navController.navigate("ManageScreen")}, weatherViewModel)
         }
         //声明名为MainPage的页面路由
         composable("AddScreen"){
+            val weatherViewModel = hiltViewModel<WeatherViewModel>()
             //页面路由对应的页面组件
-            AddScreen()
+            AddScreen(weatherViewModel)
         }
         composable("ManageScreen"){
             val weatherViewModel = hiltViewModel<WeatherViewModel>()

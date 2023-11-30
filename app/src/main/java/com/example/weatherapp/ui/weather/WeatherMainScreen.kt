@@ -60,6 +60,7 @@ import com.example.weatherapp.R
 @Composable
 fun WeatherMainScreen(
     toAddScreen: () -> Unit,
+    toManageScreen: () -> Unit,
     weatherViewModel: WeatherViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -96,7 +97,7 @@ fun WeatherMainScreen(
         })
     // need to in the after of HorizontalPager
     // for on the upper layer of HorizontalPager
-    WeatherTopBar({ weatherViewModel.getWeather() }, toAddScreen)
+    WeatherTopBar(toAddScreen,toManageScreen)
 
 }
 

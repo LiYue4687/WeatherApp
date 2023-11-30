@@ -61,4 +61,8 @@ class WeatherRepository @Inject constructor(private val context: Application) {
         weatherDAO.delCity(cityEntity)
     }
 
+    fun getTotalCity(): List<CityListEntity>{
+        return cityListDAO.getAll()
+    }
+
 }

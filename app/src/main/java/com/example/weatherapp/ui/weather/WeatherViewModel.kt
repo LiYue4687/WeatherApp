@@ -13,6 +13,7 @@ import com.example.weatherapp.data.retrofit.WeatherClient
 import com.example.weatherapp.data.retrofit.entity.CastItem
 import com.example.weatherapp.data.retrofit.entity.Forecast
 import com.example.weatherapp.data.room.entity.CityEntity
+import com.example.weatherapp.data.room.entity.CityListEntity
 import com.example.weatherapp.data.room.entity.ForecastEntity
 import com.example.weatherapp.data.room.repository.WeatherRepository
 import com.example.weatherapp.ui.weather.util.ClassTransUtil
@@ -35,6 +36,8 @@ class WeatherViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository
 ) : AndroidViewModel(application) {
     val cityList: MutableState<List<CityEntity>> = mutableStateOf(listOf())
+
+    val totalCity: MutableState<List<CityListEntity>> = mutableStateOf(listOf())
 
     init {
         init()
@@ -69,11 +72,11 @@ class WeatherViewModel @Inject constructor(
 
 
     // quest weather information by retrofit
-    fun getWeather() {
+    fun getWeather(adCode: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val weatherResponse = WeatherClient.weatherAPI.getWeather(
                 "9ae5b2161dee449c6594537c48394902",
-                "141023", "all"
+                adCode, "all"
             )
 //            Log.d("myTest", "weatherResponse: $weatherResponse")
             for (forecast in weatherResponse.forecasts) {
@@ -127,6 +130,7 @@ class WeatherViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val cities = weatherRepository.getCities()
             val stateList: MutableList<WeatherState> = mutableListOf()
+            val total = getTotalCity()
             for (city in cities) {
 //                Log.i("myTest", "")
                 stateList.add(
@@ -141,6 +145,9 @@ class WeatherViewModel @Inject constructor(
                 cityList.apply {
                     cityList.value = cities
                 }
+                totalCity.apply {
+                    totalCity.value = total
+                }
                 for ((index, city) in cities.withIndex()) {
                     weatherState.apply {
                         weatherState[city.name] = mutableStateOf(stateList[index])
@@ -154,6 +161,11 @@ class WeatherViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             weatherRepository.delCity(city)
         }
+    }
+
+
+    fun getTotalCity():List<CityListEntity>{
+        return weatherRepository.getTotalCity()
     }
 
 }
