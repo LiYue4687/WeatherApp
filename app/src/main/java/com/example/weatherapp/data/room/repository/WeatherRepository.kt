@@ -65,4 +65,8 @@ class WeatherRepository @Inject constructor(private val context: Application) {
         return cityListDAO.getAll()
     }
 
+    fun getTotalCityByName(name:String): List<CityListEntity>{
+        return cityListDAO.selectByName(name)
+    }
+
 }
