@@ -24,7 +24,7 @@ fun NavGraph() {
         composable("AddScreen"){
             val weatherViewModel = hiltViewModel<WeatherViewModel>()
             //页面路由对应的页面组件
-            AddScreen(weatherViewModel)
+            AddScreen(weatherViewModel, {navController.navigateUp()})
         }
         composable("ManageScreen"){
             val weatherViewModel = hiltViewModel<WeatherViewModel>()
