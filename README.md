@@ -44,22 +44,30 @@ complete the database init, and changed the database structure.
 
 2023/11/30:Add the screen of manage the cities, accomplish the function of show the cities and slide to delete.
 
+2023/12/3:Add search box of addScreen.
+
+2023/12/5:Beautified the city adding and management page.
+
 
 # TODO List
 View
 - modifier the WeatherMainsScreen, make it better
-- screen of add city to know the weather
-- screen of manage the cities
+- ~~screen of add city to know the weather~~
+- ~~screen of manage the cities~~
+- add a view to show the position
 
 Navigation
-- add another navigation to screen of manage the city that want to know the weather
+- ~~add another navigation to screen of manage the city that want to know the weather~~
+- Add display of current page under WeatherMainsScreen page
 
 Animation:
 - add weather animation
 
 DataBase
 - ~~add the init of database~~
-- add migration of database
+- ~~add migration of database~~
+- make database structure more sensible
+- Implement the function of obtaining related table data
 
 Api
 - Change to a more feature-rich API
