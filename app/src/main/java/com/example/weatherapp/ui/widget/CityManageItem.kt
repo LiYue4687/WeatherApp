@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -39,11 +40,12 @@ fun CityManageItem(
 
     val coroutineScope = rememberCoroutineScope()
 
-    SwipeDeleteLayout(swipeState = swipeState, childContent = {
+    SwipeDeleteLayout(
+        modifier = Modifier.padding(vertical = 1.dp, horizontal = 5.dp),
+        swipeState = swipeState, childContent = {
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(vertical = 6.dp)
         ) {
             Card(
                 modifier = Modifier.weight(1f),

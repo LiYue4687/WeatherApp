@@ -11,7 +11,7 @@ interface CityListDAO {
     @Query("SELECT * FROM city_list")
     fun getAll(): List<CityListEntity>
 
-    @Query("SELECT * FROM city_list WHERE city_list.name = :name" )
+    @Query("SELECT * FROM city_list WHERE city_list.name LIKE '%'||:name||'%'" )
     fun selectByName(name:String): List<CityListEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

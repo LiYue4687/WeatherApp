@@ -25,6 +25,7 @@ class AddViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             addCityList.apply {
                 addCityList.value = weatherRepository.getTotalCityByName(name)
+                Log.i("myTest", name)
                 Log.i("myTest", weatherRepository.getTotalCityByName(name).toString())
             }
         }

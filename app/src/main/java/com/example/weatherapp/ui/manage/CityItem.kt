@@ -24,9 +24,13 @@ fun CityItem(
     val swipeState = rememberSwipeableState(0)
     val coroutineScope = rememberCoroutineScope()
 
-    SwipeDeleteLayout(swipeState = swipeState, isShowChild = isShowDelete, childContent = {
+    SwipeDeleteLayout(
+        swipeState = swipeState,
+        isShowChild = isShowDelete,
+        childContent = {
 
-    }) {
+        }
+    ) {
         Card( modifier = Modifier.fillMaxWidth().height(30.dp)) {
             Text(text = "$cityInfo")
         }
