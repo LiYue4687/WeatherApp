@@ -39,7 +39,7 @@ fun ManageScreen(
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
-                painter = painterResource(id = com.example.weatherapp.R.drawable.background),
+                painter = painterResource(id = com.example.weatherapp.R.drawable.sunbackground),
                 contentDescription = "",
                 contentScale = ContentScale.FillBounds, // or some other scale
                 modifier = Modifier.matchParentSize()

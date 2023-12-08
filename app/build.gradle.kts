@@ -20,6 +20,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
     }
 
     buildTypes {
@@ -79,6 +80,7 @@ dependencies {
     // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:adapter-rxjava3:2.9.0")
     //  implementation("com.squareup.picasso:picasso")
 
     // Hilt
@@ -97,4 +99,17 @@ dependencies {
 
     //newest material
     implementation("androidx.compose.material:material:1.3.1")
+
+    // RxJava
+    implementation("io.reactivex.rxjava3:rxjava:3.1.8")
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+
+//    // Google map
+//    implementation("com.google.maps.android:maps-compose:4.3.0")
+//    // Optionally, you can include the Compose utils library for Clustering,
+//    // Street View metadata checks, etc.
+//    implementation("com.google.maps.android:maps-compose-utils:4.3.0")
+//    // Optionally, you can include the widgets library for ScaleBar, etc.
+//    implementation("com.google.maps.android:maps-compose-widgets:4.3.0")
+
 }

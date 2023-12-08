@@ -1,6 +1,7 @@
 package com.example.weatherapp.data.retrofit
 
 import com.google.gson.internal.bind.MapTypeAdapterFactory
+import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
