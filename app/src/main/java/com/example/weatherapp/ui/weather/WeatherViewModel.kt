@@ -91,8 +91,7 @@ class WeatherViewModel @Inject constructor(
                     )
                 }
             }
-
-            init()
+//            init()
         }
     }
 
@@ -117,7 +116,9 @@ class WeatherViewModel @Inject constructor(
 
 
     private suspend fun insetOrUpdateWeatherForecast(forecastEntity: ForecastEntity) {
+//        Log.i("myTest", "${forecastEntity.uid}")
         if (weatherRepository.getWeatherByUid(forecastEntity.uid) != null) {
+//            Log.i("myTest", "uid != nul")
             weatherRepository.updateWeatherForecast(forecastEntity)
         } else {
             weatherRepository.insertWeatherForecast(forecastEntity)
@@ -129,6 +130,9 @@ class WeatherViewModel @Inject constructor(
             val cities = weatherRepository.getCities()
             val stateList: MutableList<WeatherState> = mutableListOf()
             val total = getTotalCity()
+            for (city in cities) {
+                getWeather(city.code)
+            }
             for (city in cities) {
 //                Log.i("myTest", "")
                 stateList.add(

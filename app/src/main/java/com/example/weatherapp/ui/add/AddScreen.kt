@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.add
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -98,7 +99,7 @@ fun AddScreen(
                 itemsIndexed(totalCity) { index, item ->
                     AddCityItem(
                         item = item,
-                        onAddClick = { weatherViewModel.getWeather(item.ad_code) }
+                        weatherViewModel = weatherViewModel
                     )
                 }
             }
@@ -135,12 +136,13 @@ private fun AddTopBar(
 @Composable
 fun AddCityItem(
     item: CityListEntity,
-    onAddClick: () -> Unit,
+    weatherViewModel: WeatherViewModel,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier.clickable { onAddClick }
-            .padding(start = 20.dp, end = 20.dp, top = 5.dp)
+        modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 5.dp)
+            .clickable { weatherViewModel.getWeather(item.ad_code) }
+
     ) {
 
         Row(

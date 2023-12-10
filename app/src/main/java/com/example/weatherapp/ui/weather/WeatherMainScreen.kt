@@ -28,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -35,6 +36,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.weatherapp.R
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -100,11 +105,12 @@ fun WeatherMainBody(
     ) {
         Text(text = "$curPosition", fontSize = 30.sp)
         Text(text = "$curWeather", fontSize = 40.sp)
-        Image(
-            painter = painterResource(id = R.drawable.icon_rain),
-            contentDescription = "",
-            modifier = Modifier.size(100.dp)
-        )
+//        Image(
+//            painter = painterResource(id = R.drawable.icon_rain),
+//            contentDescription = "",
+//            modifier = Modifier.size(100.dp)
+//        )
+        WeatherAnimation(curWeather)
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -229,5 +235,26 @@ fun WeatherTopBar(
 
 
 
+@Composable
+fun WeatherAnimation(weather:String) {
+    var raw:Int = when (weather) {
+        "晴" -> R.raw.sun
+        "阴" -> R.raw.cloud
+        "多云" -> R.raw.cloud
+        "雨", "小雨", "大雨" -> R.raw.rain_day
+        "雷雨" -> R.raw.rain_thunder
+        "雪" -> R.raw.snow
+        else -> R.raw.sun
+    }
+    // 加在 Lottie资源
+    val lottieComposition by rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(raw)
+    )
+    LottieAnimation(
+        lottieComposition,
+        restartOnPlay = true,// 暂停后重新播放是否从头开始
+        iterations = LottieConstants.IterateForever, // 设置循环播放次数
+    )
+}
 
 
