@@ -48,6 +48,8 @@ complete the database init, and changed the database structure.
 
 2023/12/5:Beautified the city adding and management page.
 
+2023/12/10:add lottie animation
+
 
 # TODO List
 View
