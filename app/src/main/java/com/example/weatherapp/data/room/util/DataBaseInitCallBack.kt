@@ -17,14 +17,12 @@ import org.json.JSONArray
 class DataBaseInitCallBack(private val context: Context) : RoomDatabase.Callback() {
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
-        Log.i("myTest","the fun is onCreate")
         CoroutineScope(Dispatchers.IO).launch {
             prePopulateCitys(context)
         }
     }
 
     suspend fun prePopulateCitys(context: Context) {
-        Log.i("myTest","the fun is invoked")
         try {
             val cityListDAO: CityListDAO = WeatherDatabase.getDatabase(context).cityListDAO()
             val cityInfoDAO: CityInfoDAO = WeatherDatabase.getDatabase(context).cityInfoDAO()
@@ -39,21 +37,15 @@ class DataBaseInitCallBack(private val context: Context) : RoomDatabase.Callback
             var name: String
             var citycode: String = "unknown"
             var adcode: String
-            Log.i("myTest",cityList.toString())
             cityList.takeIf { it.length() > 0 }?.let { list ->
                 for (index in 0 until list.length()) {
                     val cityObj = list.getJSONObject(index)
-                    Log.i("myTest",cityObj.toString())
                     name = cityObj.get("name").toString()
                     adcode = cityObj.get("adcode").toString()
-                    Log.i("myTest",cityObj.has("citycode").toString())
                     if (!cityObj.has("citycode")){
                         privince = name
                     }
                     else {
-                        Log.i("myTest",name)
-                        Log.i("myTest",adcode)
-                        Log.i("myTest",CityInfoEntity(privince, city, citycode).toString())
                         if (citycode!=cityObj.get("citycode").toString()){
                             citycode=cityObj.get("citycode").toString()
                             city = name

@@ -16,11 +16,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.weatherapp.ui.weather.WeatherViewModel
 import com.example.weatherapp.ui.widget.CityManageItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,6 +36,7 @@ fun ManageScreen(
     onUpClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val cityList = weatherViewModel.cityList
 
 
@@ -47,7 +55,13 @@ fun ManageScreen(
         }
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
             itemsIndexed(cityList.value) { index, it ->
-                CityManageItem(it) { weatherViewModel.delCity(it) }
+                CityManageItem(it) {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        val result = async { weatherViewModel.delCity(it) }
+                        result.await()
+                        weatherViewModel.fresh()
+                    }
+                }
             }
         }
     }

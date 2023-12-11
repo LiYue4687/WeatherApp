@@ -50,6 +50,14 @@ complete the database init, and changed the database structure.
 
 2023/12/10:add lottie animation
 
+2023/12/11:
+1. Fixed a bug: the main page will not be updated after deleting and adding cities. Put the weatherModel used by multiple pages on the outermost layer of navGraph. Repeatedly building multiple viewmodels will obviously cause errors.
+2. Tried using coil to load the background image. (Commented for now, not necessary) (coil uses kotlin's coroutine, which is more suitable for use in compose. coil is lightweight and fast)
+3. After deleting a city, the sliding bar on the page is also deleted.
+4. add weather animation
+
+
+
 
 # TODO List
 View
@@ -57,13 +65,16 @@ View
 - ~~screen of add city to know the weather~~
 - ~~screen of manage the cities~~
 - add a view to show the position
+- Add feedback after adding a city. After adding, the Add button is no longer displayed.
 
 Navigation
 - ~~add another navigation to screen of manage the city that want to know the weather~~
 - Add display of current page under WeatherMainsScreen page
 
 Animation:
-- add weather animation
+- ~~add weather animation~~
+- Set up a topbar that can be scaled.
+- Learn nested scrolling.
 
 DataBase
 - ~~add the init of database~~

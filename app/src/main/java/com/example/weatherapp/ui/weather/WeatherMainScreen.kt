@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.weather
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -28,7 +29,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -36,6 +42,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -50,14 +57,27 @@ fun WeatherMainScreen(
     weatherViewModel: WeatherViewModel,
     modifier: Modifier = Modifier
 ) {
-    val cityList = weatherViewModel.cityList
+    var cityList = weatherViewModel.cityList
+    var weatherState = weatherViewModel.weatherState
 
     val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f
     )
 
+    // 在更新内容后调用 animateScrollToPage 来切换到新的页面
+    LaunchedEffect(cityList) {
+        pagerState.animateScrollToPage(0) // 这里可以替换为你希望的页面索引
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
+        // use coil to load image
+//        AsyncImage(
+//            model = "https://pic-go-bed.oss-cn-beijing.aliyuncs.com/img/20220316151929.png",
+//            contentDescription = null,
+//            modifier = Modifier.matchParentSize()
+//        )
+
         Image(
             painter = painterResource(id = R.drawable.sunbackground),
             contentDescription = "",
@@ -65,17 +85,13 @@ fun WeatherMainScreen(
             modifier = Modifier.matchParentSize()
         )
     }
-
     HorizontalPager(modifier = modifier,
         state = pagerState,
-        pageCount = weatherViewModel.cityList.value.size,
+        pageCount = cityList.value.size,
         pageContent = { page ->
             val curPosition = cityList.value[page].name
             WeatherMainBody(
-                curPosition, weatherViewModel.getCurWeather(curPosition),
-                weatherViewModel.getAirScore(curPosition),
-                weatherViewModel.getWeatherByHour(curPosition),
-                weatherViewModel.getWeatherByDay(curPosition),
+                curPosition, weatherState[curPosition]!!,
                 modifier = Modifier.absolutePadding(
                     left = 15.dp, right = 15.dp
                 )
@@ -90,27 +106,27 @@ fun WeatherMainScreen(
 @Composable
 fun WeatherMainBody(
     curPosition: String,
-    curWeather: String,
-    airScore: Int,
-    weatherByHour: List<Pair<String, Int>>,
-    weatherByDay: List<Triple<String, Int, Int>>,
+    weatherState: MutableState<WeatherState>,
     modifier: Modifier = Modifier
 ) {
 
-
+    val weatherByDay = weatherState.value.weatherByDay
+    val weatherByHour = weatherState.value.weatherByHour
+    val curWeather = weatherState.value.weatherByDay[0]
+    val airScore = weatherState.value.airScore
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "$curPosition", fontSize = 30.sp)
-        Text(text = "$curWeather", fontSize = 40.sp)
+        Text(text = "${curWeather.first}  ${curWeather.second}°C", fontSize = 40.sp)
 //        Image(
 //            painter = painterResource(id = R.drawable.icon_rain),
 //            contentDescription = "",
 //            modifier = Modifier.size(100.dp)
 //        )
-        WeatherAnimation(curWeather)
+        WeatherAnimation(curWeather.first)
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -239,22 +255,34 @@ fun WeatherTopBar(
 fun WeatherAnimation(weather:String) {
     var raw:Int = when (weather) {
         "晴" -> R.raw.sun
-        "阴" -> R.raw.cloud
-        "多云" -> R.raw.cloud
-        "雨", "小雨", "大雨" -> R.raw.rain_day
+        "阴", "多云" -> R.raw.cloud
+        "雨", "小雨", "中雨", "大雨" -> R.raw.rain_day
         "雷雨" -> R.raw.rain_thunder
-        "雪" -> R.raw.snow
+        "雪", "小雪", "中雪", "大雪", "雨夹雪" -> R.raw.snow
         else -> R.raw.sun
     }
     // 加在 Lottie资源
     val lottieComposition by rememberLottieComposition(
         spec = LottieCompositionSpec.RawRes(raw)
     )
-    LottieAnimation(
-        lottieComposition,
-        restartOnPlay = true,// 暂停后重新播放是否从头开始
-        iterations = LottieConstants.IterateForever, // 设置循环播放次数
-    )
+    var animationLoaded by remember { mutableStateOf(false) }
+    if (animationLoaded) {
+        LottieAnimation(
+            lottieComposition,
+            restartOnPlay = true,// 暂停后重新播放是否从头开始
+            iterations = LottieConstants.IterateForever, // 设置循环播放次数
+            modifier = Modifier
+                .size(200.dp) // Set the size you want for your Lottie animation
+        )
+    } else {
+        // Placeholder size
+        Box(modifier = Modifier.size(200.dp))
+    }
+
+    // Trigger the flag once the Lottie animation is loaded
+    LaunchedEffect(lottieComposition) {
+        animationLoaded = true
+    }
 }
 
 

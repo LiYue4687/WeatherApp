@@ -31,6 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +44,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.data.room.entity.CityListEntity
 import com.example.weatherapp.ui.weather.WeatherViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -139,9 +144,18 @@ fun AddCityItem(
     weatherViewModel: WeatherViewModel,
     modifier: Modifier = Modifier
 ) {
+    val coroutineScope = rememberCoroutineScope()
     Card(
-        modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 5.dp)
-            .clickable { weatherViewModel.getWeather(item.ad_code) }
+        modifier = Modifier
+            .padding(start = 20.dp, end = 20.dp, top = 5.dp)
+            .clickable {
+                coroutineScope.launch(Dispatchers.IO) {
+                    val result = async { weatherViewModel.getWeather(item.ad_code) }
+                    result.await()
+                    weatherViewModel.fresh()
+                }
+
+            }
 
     ) {
 

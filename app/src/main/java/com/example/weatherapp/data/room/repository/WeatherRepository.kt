@@ -1,6 +1,7 @@
 package com.example.weatherapp.data.room.repository
 
 import android.app.Application
+import android.util.Log
 import com.example.weatherapp.data.room.dao.CityInfoDAO
 import com.example.weatherapp.data.room.dao.CityListDAO
 import com.example.weatherapp.data.room.dao.WeatherDAO
@@ -41,16 +42,15 @@ class WeatherRepository @Inject constructor(private val context: Application) {
         weatherDAO.insertCity(cityEntity)
     }
 
-    fun insertWeatherForecast(forecastEntity: ForecastEntity) {
-        weatherDAO.insertWeatherForecast(forecastEntity)
-    }
-
     fun insertCityList(cityListEntity: CityListEntity){
         cityListDAO.insert(cityListEntity)
     }
 
     fun insertCityInfo(cityInfoEntity: CityInfoEntity){
         cityInfoDAO.insert(cityInfoEntity)
+    }
+    fun insertWeatherForecast(forecastEntity: ForecastEntity) {
+        weatherDAO.insertWeatherForecast(forecastEntity)
     }
 
     fun updateWeatherForecast(forecastEntity: ForecastEntity) {

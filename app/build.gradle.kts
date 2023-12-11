@@ -87,6 +87,9 @@ dependencies {
     implementation("com.squareup.retrofit2:adapter-rxjava3:2.9.0")
     //  implementation("com.squareup.picasso:picasso")
 
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
     // Hilt
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
