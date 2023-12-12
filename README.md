@@ -56,6 +56,8 @@ complete the database init, and changed the database structure.
 3. After deleting a city, the sliding bar on the page is also deleted.
 4. add weather animation
 
+2023/12/12:Displaying Search Results Using a Join Query
+
 
 
 
@@ -80,7 +82,7 @@ DataBase
 - ~~add the init of database~~
 - ~~add migration of database~~
 - make database structure more sensible
-- Implement the function of obtaining related table data
+- ~~Implement the function of obtaining related table data~~
 
 Api
 - Change to a more feature-rich API

@@ -6,6 +6,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weatherapp.data.room.dao.CitySearch
 import com.example.weatherapp.data.room.entity.CityEntity
 import com.example.weatherapp.data.room.entity.CityListEntity
 import com.example.weatherapp.data.room.repository.WeatherRepository
@@ -19,16 +20,14 @@ class AddViewModel @Inject constructor(
     application: Application,
     private val weatherRepository: WeatherRepository
 ) : AndroidViewModel(application) {
-    val addCityList: MutableState<List<CityListEntity>> = mutableStateOf(listOf())
+    val addCityList: MutableState<List<CitySearch>> = mutableStateOf(listOf())
 
     fun updateCityList(name :String){
         viewModelScope.launch(Dispatchers.IO) {
             addCityList.apply {
-                addCityList.value = weatherRepository.getTotalCityByName(name)
-                Log.i("myTest", "AddViewModel 查找结果：" + addCityList.value.toString())
+                addCityList.value = weatherRepository.getSearchCityByName(name)
             }
         }
-
     }
 
 }

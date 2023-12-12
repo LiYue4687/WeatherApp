@@ -72,11 +72,11 @@ fun WeatherMainScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         // use coil to load image
-//        AsyncImage(
-//            model = "https://pic-go-bed.oss-cn-beijing.aliyuncs.com/img/20220316151929.png",
-//            contentDescription = null,
-//            modifier = Modifier.matchParentSize()
-//        )
+        AsyncImage(
+            model = "https://pic-go-bed.oss-cn-beijing.aliyuncs.com/img/20220316151929.png",
+            contentDescription = null,
+            modifier = Modifier.matchParentSize()
+        )
 
         Image(
             painter = painterResource(id = R.drawable.sunbackground),

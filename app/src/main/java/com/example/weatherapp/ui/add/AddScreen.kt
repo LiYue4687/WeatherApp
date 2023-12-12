@@ -42,6 +42,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.data.room.dao.CitySearch
 import com.example.weatherapp.data.room.entity.CityListEntity
 import com.example.weatherapp.ui.weather.WeatherViewModel
 import kotlinx.coroutines.Dispatchers
@@ -140,7 +141,7 @@ private fun AddTopBar(
 
 @Composable
 fun AddCityItem(
-    item: CityListEntity,
+    item: CitySearch,
     weatherViewModel: WeatherViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -165,7 +166,7 @@ fun AddCityItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(text = "${item.ad_code}", color = Color.DarkGray, fontSize = 10.sp,
+                Text(text = "${item.province} ${item.city}", color = Color.DarkGray, fontSize = 10.sp,
                     modifier = Modifier.padding(5.dp))
 
                 Text(

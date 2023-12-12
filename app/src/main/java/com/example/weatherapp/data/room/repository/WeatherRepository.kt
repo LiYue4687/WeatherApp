@@ -4,6 +4,8 @@ import android.app.Application
 import android.util.Log
 import com.example.weatherapp.data.room.dao.CityInfoDAO
 import com.example.weatherapp.data.room.dao.CityListDAO
+import com.example.weatherapp.data.room.dao.CitySearch
+import com.example.weatherapp.data.room.dao.CitySearchDAO
 import com.example.weatherapp.data.room.dao.WeatherDAO
 import com.example.weatherapp.data.room.database.WeatherDatabase
 import com.example.weatherapp.data.room.entity.CityEntity
@@ -20,6 +22,7 @@ class WeatherRepository @Inject constructor(private val context: Application) {
     private val weatherDAO: WeatherDAO = WeatherDatabase.getDatabase(context).weatherDAO()
     private val cityListDAO: CityListDAO = WeatherDatabase.getDatabase(context).cityListDAO()
     private val cityInfoDAO: CityInfoDAO = WeatherDatabase.getDatabase(context).cityInfoDAO()
+    private val citySearchDAO: CitySearchDAO = WeatherDatabase.getDatabase(context).citySearchDAO()
 
     fun getCities(): List<CityEntity> {
         return weatherDAO.getCities()
@@ -67,6 +70,10 @@ class WeatherRepository @Inject constructor(private val context: Application) {
 
     fun getTotalCityByName(name:String): List<CityListEntity>{
         return cityListDAO.selectByName(name)
+    }
+
+    fun getSearchCityByName(name:String): List<CitySearch>{
+        return citySearchDAO.selectByName(name)
     }
 
 }

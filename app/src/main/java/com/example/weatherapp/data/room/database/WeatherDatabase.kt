@@ -7,6 +7,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.weatherapp.data.room.dao.CityInfoDAO
 import com.example.weatherapp.data.room.dao.CityListDAO
+import com.example.weatherapp.data.room.dao.CitySearchDAO
 import com.example.weatherapp.data.room.dao.WeatherDAO
 import com.example.weatherapp.data.room.entity.CityEntity
 import com.example.weatherapp.data.room.entity.CityInfoEntity
@@ -25,6 +26,7 @@ abstract class WeatherDatabase : RoomDatabase() {
     abstract fun weatherDAO(): WeatherDAO
     abstract fun cityListDAO(): CityListDAO
     abstract fun cityInfoDAO(): CityInfoDAO
+    abstract fun citySearchDAO(): CitySearchDAO
 
     companion object {
         @Volatile
