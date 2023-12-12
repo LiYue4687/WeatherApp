@@ -3,6 +3,7 @@ package com.example.weatherapp.ui.weather
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,14 +20,21 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,6 +42,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,8 +57,17 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.weatherapp.R
+import com.example.weatherapp.ui.widget.HorizontalPagerIndicator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
+    ExperimentalMaterialApi::class
+)
 @Composable
 fun WeatherMainScreen(
     toAddScreen: () -> Unit,
@@ -65,18 +83,36 @@ fun WeatherMainScreen(
         initialPageOffsetFraction = 0f
     )
 
-    // 在更新内容后调用 animateScrollToPage 来切换到新的页面
+    // 在更新内容后调用 animateScrollToPage 来切换到第一个的页面
     LaunchedEffect(cityList) {
-        pagerState.animateScrollToPage(0) // 这里可以替换为你希望的页面索引
+        pagerState.animateScrollToPage(0)
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    var refreshing by remember {
+        mutableStateOf(false)
+    }
+    // 用协程模拟一个耗时加载
+    val scope = rememberCoroutineScope()
+    val state = rememberPullRefreshState(refreshing = refreshing, onRefresh = {
+        scope.launch(Dispatchers.IO) {
+            refreshing = true
+            val result = async { weatherViewModel.fresh() }
+            result.await()
+            refreshing = false
+        }
+    })
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(state)
+    ) {
         // use coil to load image
-        AsyncImage(
-            model = "https://pic-go-bed.oss-cn-beijing.aliyuncs.com/img/20220316151929.png",
-            contentDescription = null,
-            modifier = Modifier.matchParentSize()
-        )
+//        AsyncImage(
+//            model = "https://pic-go-bed.oss-cn-beijing.aliyuncs.com/img/20220316151929.png",
+//            contentDescription = null,
+//            modifier = Modifier.matchParentSize()
+//        )
 
         Image(
             painter = painterResource(id = R.drawable.sunbackground),
@@ -84,23 +120,36 @@ fun WeatherMainScreen(
             contentScale = ContentScale.FillBounds, // or some other scale
             modifier = Modifier.matchParentSize()
         )
-    }
-    HorizontalPager(modifier = modifier,
-        state = pagerState,
-        pageCount = cityList.value.size,
-        pageContent = { page ->
-            val curPosition = cityList.value[page].name
-            WeatherMainBody(
-                curPosition, weatherState[curPosition]!!,
-                modifier = Modifier.absolutePadding(
-                    left = 15.dp, right = 15.dp
-                )
-            )
-        })
-    // need to in the after of HorizontalPager
-    // for on the upper layer of HorizontalPager
-    WeatherTopBar(toAddScreen,toManageScreen)
 
+        HorizontalPager(modifier = modifier,
+            state = pagerState,
+            pageCount = cityList.value.size,
+            pageContent = { page ->
+                val curPosition = cityList.value[page].name
+                WeatherMainBody(
+                    curPosition, weatherState[curPosition]!!,
+                    modifier = Modifier.absolutePadding(
+                        left = 15.dp, right = 15.dp
+                    )
+                )
+            })
+
+
+        // need to in the after of HorizontalPager
+        // for on the upper layer of HorizontalPager
+        WeatherTopBar(toAddScreen, toManageScreen)
+
+        HorizontalPagerIndicator(
+            pagerState = pagerState,
+            pageCount = cityList.value.size,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp),
+        )
+
+        PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
+
+    }
 }
 
 @Composable
@@ -223,8 +272,6 @@ fun WeatherMainBody(
             }
 
         }
-
-
     }
 }
 
@@ -250,10 +297,9 @@ fun WeatherTopBar(
 }
 
 
-
 @Composable
-fun WeatherAnimation(weather:String) {
-    var raw:Int = when (weather) {
+fun WeatherAnimation(weather: String) {
+    var raw: Int = when (weather) {
         "晴" -> R.raw.sun
         "阴", "多云" -> R.raw.cloud
         "雨", "小雨", "中雨", "大雨" -> R.raw.rain_day

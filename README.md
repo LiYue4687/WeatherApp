@@ -56,7 +56,9 @@ complete the database init, and changed the database structure.
 3. After deleting a city, the sliding bar on the page is also deleted.
 4. add weather animation
 
-2023/12/12:Displaying Search Results Using a Join Query
+2023/12/12:
+1. Displaying Search Results Using a Join Query
+2. Add a pull-fresh function. But must in the view that be able to scroll, we can pull to fresh. Components without sliding functionality cannot pass sliding to the parent component, and therefore cannot change the sliding state. At the same time, when wrapping horizontalpager, it will be considered that the vertical and horizontal sizes of the components wrapping it are infinite, so modifier.verticalScroll cannot be added to the parent component of horizontalpager. 
 
 
 
