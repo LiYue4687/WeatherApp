@@ -10,10 +10,10 @@ import com.example.weatherapp.data.room.entity.CityListEntity
 interface CitySearchDAO {
     @Query(
         """
-            SELECT  city_list.ad_code as ad_code, city_list.name as name, city_info.city as city, city_info.province as province 
-            FROM    city_list, city_info
-            WHERE   ((city_list.name LIKE '%'||:name||'%') OR (city_info.city LIKE '%'||:name||'%'))
-                    AND city_list.city_code = city_info.city_code
+            SELECT city_list.ad_code as ad_code, city_list.name as name, city_info.city as city, city_info.province as province
+            FROM city_list
+            INNER JOIN city_info ON city_list.city_code = city_info.city_code
+            WHERE (city_list.name LIKE '%'||:name||'%') OR (city_info.city LIKE '%'||:name||'%');
             """
     )
     fun selectByName(name: String): List<CitySearch>

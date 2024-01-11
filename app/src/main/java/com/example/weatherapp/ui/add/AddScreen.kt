@@ -42,6 +42,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.data.retrofit.entity.CityItem
 import com.example.weatherapp.data.room.dao.CitySearch
 import com.example.weatherapp.data.room.entity.CityListEntity
 import com.example.weatherapp.ui.weather.WeatherViewModel
@@ -141,7 +142,7 @@ private fun AddTopBar(
 
 @Composable
 fun AddCityItem(
-    item: CitySearch,
+    item: CityItem,
     weatherViewModel: WeatherViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -151,7 +152,7 @@ fun AddCityItem(
             .padding(start = 20.dp, end = 20.dp, top = 5.dp)
             .clickable {
                 coroutineScope.launch(Dispatchers.IO) {
-                    val result = async { weatherViewModel.getWeather(item.ad_code) }
+                    val result = async { weatherViewModel.getWeather(item.adCode) }
                     result.await()
                     weatherViewModel.fresh()
                 }
@@ -166,11 +167,11 @@ fun AddCityItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(text = "${item.province} ${item.city}", color = Color.DarkGray, fontSize = 10.sp,
+                Text(text = "${item.provinceName} ${item.cityName}", color = Color.DarkGray, fontSize = 10.sp,
                     modifier = Modifier.padding(5.dp))
 
                 Text(
-                    text = "${item.name}",
+                    text = "${item.countyName}",
                     modifier = Modifier.padding(start = 5.dp),
                     fontSize = 20.sp
                 )

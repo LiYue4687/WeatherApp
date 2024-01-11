@@ -3,15 +3,11 @@ package com.example.weatherapp.ui.weather
 import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.retrofit.WeatherClient
-import com.example.weatherapp.data.retrofit.entity.CastItem
 import com.example.weatherapp.data.retrofit.entity.Forecast
 import com.example.weatherapp.data.room.entity.CityEntity
 import com.example.weatherapp.data.room.entity.CityListEntity
@@ -20,11 +16,7 @@ import com.example.weatherapp.data.room.repository.WeatherRepository
 import com.example.weatherapp.ui.weather.util.ClassTransUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -36,7 +28,7 @@ class WeatherViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
     var cityList: MutableState<List<CityEntity>> = mutableStateOf(listOf())
 
-    val totalCity: MutableState<List<CityListEntity>> = mutableStateOf(listOf())
+    private val totalCity: MutableState<List<CityListEntity>> = mutableStateOf(listOf())
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -51,9 +43,12 @@ class WeatherViewModel @Inject constructor(
     // quest weather information by retrofit
     suspend fun getWeather(adCode: String) {
         val weatherResponse = WeatherClient.weatherAPI.getWeather(
-            "9ae5b2161dee449c6594537c48394902",
             adCode, "all"
         )
+        val weather24hourResponse = WeatherClient.weatherAPI.getWeather24hour(
+            adCode, "all"
+        )
+        Log.i("myTest", weather24hourResponse.toString())
         for (forecast in weatherResponse.forecasts) {
             buildAndInsertCity(forecast)
             for (i in forecast.casts.indices) {
@@ -68,7 +63,7 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    private suspend fun buildAndInsertCity(forecast: Forecast) {
+    private fun buildAndInsertCity(forecast: Forecast) {
         val name = forecast.province + "  " + forecast.city
         if (!containCity(name)) {
             weatherRepository.insertCity(
@@ -88,7 +83,7 @@ class WeatherViewModel @Inject constructor(
     }
 
 
-    private suspend fun insetOrUpdateWeatherForecast(forecastEntity: ForecastEntity) {
+    private fun insetOrUpdateWeatherForecast(forecastEntity: ForecastEntity) {
         if (weatherRepository.getWeatherByUid(forecastEntity.uid) != null) {
             weatherRepository.updateWeatherForecast(forecastEntity)
         } else {
@@ -104,12 +99,17 @@ class WeatherViewModel @Inject constructor(
             getWeather(city.code)
         }
         for (city in cities) {
-            stateList.add(
-                ClassTransUtil.translateSqlResultToSate(
-                    city.name,
-                    weatherRepository.getWeatherByCityName(city.name)
-                )
+            val weather24hourResponse = WeatherClient.weatherAPI.getWeather24hour(
+                city.code, "all"
             )
+            val weather24hour =
+                weather24hourResponse.forecast24hour.map { it.weather to it.temp.toInt() }
+            val tmp = ClassTransUtil.translateSqlResultToSate(
+                city.name,
+                weatherRepository.getWeatherByCityName(city.name)
+            )
+            tmp.weatherByHour = weather24hour
+            stateList.add(tmp)
         }
 
         viewModelScope.launch(Dispatchers.Main) {
@@ -136,7 +136,7 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    fun getTotalCity(): List<CityListEntity> {
+    private fun getTotalCity(): List<CityListEntity> {
         return weatherRepository.getTotalCity()
     }
 
